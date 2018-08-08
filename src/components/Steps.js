@@ -11,6 +11,7 @@ const Step = styled.div`
     text-align: center;
     border-radius: 3px;
     color: ${props => props.active ? '#fff' : '#444'};
+    transition: all .25s ease-in-out;
 
     
 `
