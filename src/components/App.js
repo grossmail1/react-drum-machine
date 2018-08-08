@@ -38,15 +38,24 @@ class App extends Component {
     }, (millisPerMinute / this.state.bpm))
   }
 
+  onPause = () => {
+    clearInterval(this.interval)
+    this.interval = null
+
+    this.setState({playing: false, currentStep: 0})
+  }
+
   render() {
-    const { bpm, currentStep } = this.state
+    const { bpm, currentStep, playing } = this.state
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Drum Machine</h1>
         </header>
         <BPM bpm={bpm} onBPMChange={this.onBPMChange}/>
-        <button onClick={this.onPlay} >Play</button>
+        <button onClick={playing ? this.onPause : this.onPlay} >
+          {playing ? 'pause' : 'play'}
+        </button>
         <Steps currentStep={currentStep} />
       </div>
     );
