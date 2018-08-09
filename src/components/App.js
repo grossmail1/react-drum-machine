@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Steps from "components/Steps"
 import BPM from "components/BPM"
+import drums from 'drums'
 
 const millisPerMinute = 1000 * 60
 
@@ -12,6 +13,7 @@ class App extends Component {
       currentStep: 0,
       playing: false,
       bpm: 80,
+      subdivisions: 4,
     }
   }
 
@@ -35,7 +37,7 @@ class App extends Component {
       }
       this.setState({currentStep})
 
-    }, (millisPerMinute / this.state.bpm))
+    }, (millisPerMinute / this.state.bpm) / this.state.subdivisions)
   }
 
   onPause = () => {
