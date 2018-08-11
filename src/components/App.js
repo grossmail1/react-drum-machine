@@ -5,6 +5,7 @@ import Steps from "components/Steps"
 import BPM from "components/BPM"
 import drums from '../drums'
 import DrumPads from "components/DrumPads"
+import { renderAudioForDrums } from '../audioHelper'
 
 const AppWrapper = styled.div`
 width: 100%;
@@ -24,27 +25,33 @@ class App extends Component {
       bpm: 80,
       subdivisions: 4,
     }
+
+    this.drums = []
+  }
+
+  componentDidMount() {
+    this.drums = renderAudioForDrums(drums)
   }
 
   onBPMChange = (event) => {
-    this.setState({bpm: event.target.value})
+    this.setState({ bpm: event.target.value })
   }
 
   onPlay = () => {
-    this.setState({playing: true})
+    this.setState({ playing: true })
 
-      // clear the old stepper and start a new one
+    // clear the old stepper and start a new one
     clearInterval(this.interval)
     this.interval = null
 
     this.interval = setInterval(() => {
       let currentStep = this.state.currentStep
-      if(currentStep < 15) {
+      if (currentStep < 15) {
         currentStep++
       } else {
         currentStep = 0
       }
-      this.setState({currentStep})
+      this.setState({ currentStep })
 
     }, (millisPerMinute / this.state.bpm) / this.state.subdivisions)
   }
@@ -53,7 +60,13 @@ class App extends Component {
     clearInterval(this.interval)
     this.interval = null
 
-    this.setState({playing: false, currentStep: 0})
+    this.setState({ playing: false, currentStep: 0 })
+  }
+
+  onPadClick = (i) => {
+    let drum = this.drums[i]
+    drum.currentTime = 0
+    drum.play()
   }
 
   render() {
@@ -64,11 +77,12 @@ class App extends Component {
           <h1>Drum Machine</h1>
         </header>
         <BPM bpm={bpm} onBPMChange={this.onBPMChange}/>
-        <button onClick={playing ? this.onPause : this.onPlay} >
+        <button onClick={playing ? this.onPause : this.onPlay}>
           {playing ? 'pause' : 'play'}
         </button>
-        <Steps currentStep={currentStep} />
-        <DrumPads drums={drums}/>
+        <Steps currentStep={currentStep}/>
+        <DrumPads drums={drums} onPadClick={this.onPadClick}/>
+        <div id="audio-wrapper"/>
       </AppWrapper>
     );
   }

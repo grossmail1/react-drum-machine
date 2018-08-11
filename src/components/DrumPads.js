@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 
@@ -26,15 +26,20 @@ const PadButton = styled.button`
 
 `
 
-const DrumPads = ({ drums }) => {
+const DrumPads = ({ drums, onPadClick }) => {
 
   return <Flex>
-    {drums.map((drum, i) => (
-      <PadWrapper>
-        <h3>{drum.label}</h3>
-        <PadButton/>
-      </PadWrapper>
-    ))}
+    {drums.map((drum, i) => {
+        const onClick = () => onPadClick(i)
+
+        return (
+          <PadWrapper>
+            <h3>{drum.label}</h3>
+            <PadButton onClick={onClick}/>
+          </PadWrapper>
+        )
+      }
+    )}
   </Flex>
 }
 
