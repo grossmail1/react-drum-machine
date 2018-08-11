@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
+import styled from 'styled-components'
+
 import Steps from "components/Steps"
 import BPM from "components/BPM"
-import drums from 'drums'
+import drums from '../drums'
+import DrumPads from "components/DrumPads"
+
+const AppWrapper = styled.div`
+width: 100%;
+height: 100%;
+background-color: #444;
+`
 
 const millisPerMinute = 1000 * 60
 
@@ -50,16 +59,17 @@ class App extends Component {
   render() {
     const { bpm, currentStep, playing } = this.state
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Drum Machine</h1>
+      <AppWrapper>
+        <header>
+          <h1>Drum Machine</h1>
         </header>
         <BPM bpm={bpm} onBPMChange={this.onBPMChange}/>
         <button onClick={playing ? this.onPause : this.onPlay} >
           {playing ? 'pause' : 'play'}
         </button>
         <Steps currentStep={currentStep} />
-      </div>
+        <DrumPads drums={drums}/>
+      </AppWrapper>
     );
   }
 }
