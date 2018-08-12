@@ -33,7 +33,7 @@ const DrumPads = ({ drums, onPadClick }) => {
         const onClick = () => onPadClick(i)
 
         return (
-          <PadWrapper>
+          <PadWrapper key={drum.label}>
             <h3>{drum.label}</h3>
             <PadButton onClick={onClick}/>
           </PadWrapper>

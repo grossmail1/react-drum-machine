@@ -6,6 +6,7 @@ import BPM from "components/BPM"
 import drums from '../drums'
 import DrumPads from "components/DrumPads"
 import { renderAudioForDrums } from '../audioHelper'
+import findIndex from "lodash-es/findIndex"
 
 const AppWrapper = styled.div`
 width: 100%;
@@ -25,8 +26,8 @@ class App extends Component {
       bpm: 80,
       subdivisions: 4,
       currentDrum: -1,
-      steps: Array.apply(null, Array(16)).map((i) => ({
-        step: i,
+      steps: Array.apply(null, Array(16)).map((d, i) => ({
+        index: i,
         drums: []
       })
     )}
@@ -70,9 +71,26 @@ class App extends Component {
   }
 
   onPadClick = (i) => {
+    this.setState({currentDrum: i})
     let drum = this.drums[i]
     drum.currentTime = 0
     drum.play()
+  }
+
+  onStepClick = (i) => {
+    console.log('i', i)
+    const newSteps = [...this.state.steps]
+    const index = findIndex(newSteps[this.state.currentDrum].drums, i)
+    console.log('index', index)
+    if (index > 0) {
+      newSteps[this.state.currentDrum].drums.splice(index, 1)
+    } else {
+      newSteps[this.state.currentDrum].drums.push(i)
+    }
+
+    this.setState({
+      steps: newSteps
+    })
   }
 
   render() {
@@ -86,7 +104,7 @@ class App extends Component {
         <button onClick={playing ? this.onPause : this.onPlay}>
           {playing ? 'pause' : 'play'}
         </button>
-        <Steps currentStep={currentStep} steps={steps}/>
+        <Steps currentStep={currentStep} steps={steps} onStepClick={this.onStepClick}/>
         <DrumPads drums={drums} onPadClick={this.onPadClick} currentDrum={currentDrum}/>
         <div id="audio-wrapper"/>
       </AppWrapper>

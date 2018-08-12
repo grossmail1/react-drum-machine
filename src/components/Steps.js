@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 
-const Step = styled.div`
+const Step = styled.button`
     width: 40px;
     border: 1px solid grey;
     background-color: ${props => props.active ? '#00aeef' : '#ddd'};
@@ -16,11 +16,12 @@ const Step = styled.div`
     
 `
 
-const Steps = ({currentStep, steps}) => {
+const Steps = ({currentStep, steps, onStepClick}) => {
 
   const renderSteps = () => {
-    return steps.map((d, i) => {
-      return <Step key={i} active={currentStep === i}>{i + 1}</Step>
+    return steps.map(step => {
+      const onClick = () => onStepClick(step.index)
+      return <Step key={step.index} active={currentStep === step.index} onClick={onClick}>{step.index + 1}</Step>
     })
   }
 
