@@ -16,10 +16,10 @@ const Step = styled.div`
     
 `
 
-const Steps = ({currentStep}) => {
+const Steps = ({currentStep, steps}) => {
 
   const renderSteps = () => {
-    return Array.apply(null, Array(16)).map((d, i) => {
+    return steps.map((d, i) => {
       return <Step key={i} active={currentStep === i}>{i + 1}</Step>
     })
   }

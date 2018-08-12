@@ -24,7 +24,13 @@ class App extends Component {
       playing: false,
       bpm: 80,
       subdivisions: 4,
-    }
+      currentDrum: -1,
+      steps: Array.apply(null, Array(16)).map((i) => ({
+        step: i,
+        drums: []
+      })
+    )}
+
 
     this.drums = []
   }
@@ -70,7 +76,7 @@ class App extends Component {
   }
 
   render() {
-    const { bpm, currentStep, playing } = this.state
+    const { bpm, currentStep, playing, steps, currentDrum } = this.state
     return (
       <AppWrapper>
         <header>
@@ -80,8 +86,8 @@ class App extends Component {
         <button onClick={playing ? this.onPause : this.onPlay}>
           {playing ? 'pause' : 'play'}
         </button>
-        <Steps currentStep={currentStep}/>
-        <DrumPads drums={drums} onPadClick={this.onPadClick}/>
+        <Steps currentStep={currentStep} steps={steps}/>
+        <DrumPads drums={drums} onPadClick={this.onPadClick} currentDrum={currentDrum}/>
         <div id="audio-wrapper"/>
       </AppWrapper>
     );
