@@ -12,7 +12,7 @@ import isEmpty from "lodash-es/isEmpty"
 const AppWrapper = styled.div`
 width: 100%;
 height: 100%;
-background-color: #777;
+background-color: #FFEFBF;
 `
 
 const millisPerMinute = 1000 * 60
