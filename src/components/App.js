@@ -7,11 +7,12 @@ import drums from '../drums'
 import DrumPads from "components/DrumPads"
 import { renderAudioForDrums } from '../audioHelper'
 import findIndex from "lodash-es/findIndex"
+import isEmpty from "lodash-es/isEmpty"
 
 const AppWrapper = styled.div`
 width: 100%;
 height: 100%;
-background-color: #444;
+background-color: #777;
 `
 
 const millisPerMinute = 1000 * 60
@@ -21,7 +22,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      currentStep: 0,
+      currentStep: -1,
       playing: false,
       bpm: 80,
       subdivisions: 4,
@@ -45,7 +46,8 @@ class App extends Component {
   }
 
   onPlay = () => {
-    this.setState({ playing: true })
+    this.setState({ playing: true, currentStep: 0 })
+    this.playDrumsForStep(0)
 
     // clear the old stepper and start a new one
     clearInterval(this.interval)
@@ -59,15 +61,29 @@ class App extends Component {
         currentStep = 0
       }
       this.setState({ currentStep })
+      this.playDrumsForStep(currentStep)
 
     }, (millisPerMinute / this.state.bpm) / this.state.subdivisions)
+  }
+
+  playDrumsForStep = (step) => {
+    const currentStep = this.state.steps[step]
+
+    const drums = currentStep.drums
+
+    if(!isEmpty(drums)) {
+      drums.forEach(d => {
+        this.drums[d].currentTime = 0
+        this.drums[d].play()
+      })
+    }
   }
 
   onPause = () => {
     clearInterval(this.interval)
     this.interval = null
 
-    this.setState({ playing: false, currentStep: 0 })
+    this.setState({ playing: false, currentStep: -1 })
   }
 
   onPadClick = (i) => {
@@ -78,14 +94,13 @@ class App extends Component {
   }
 
   onStepClick = (i) => {
-    console.log('i', i)
     const newSteps = [...this.state.steps]
     const index = findIndex(newSteps[this.state.currentDrum].drums, i)
     console.log('index', index)
     if (index > 0) {
-      newSteps[this.state.currentDrum].drums.splice(index, 1)
+      newSteps[i].drums.splice(index, 1)
     } else {
-      newSteps[this.state.currentDrum].drums.push(i)
+      newSteps[i].drums.push(this.state.currentDrum)
     }
 
     this.setState({
@@ -104,7 +119,7 @@ class App extends Component {
         <button onClick={playing ? this.onPause : this.onPlay}>
           {playing ? 'pause' : 'play'}
         </button>
-        <Steps currentStep={currentStep} steps={steps} onStepClick={this.onStepClick}/>
+        <Steps currentStep={currentStep} steps={steps} onStepClick={this.onStepClick} currentDrum={currentDrum}/>
         <DrumPads drums={drums} onPadClick={this.onPadClick} currentDrum={currentDrum}/>
         <div id="audio-wrapper"/>
       </AppWrapper>

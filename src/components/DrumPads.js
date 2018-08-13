@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 
 const PadWrapper = styled.div`
-  border: 1px solid grey;
+  border: 1px solid #333;
   border-radius: 5px;
   margin: 10px;
   padding: 5px;
@@ -16,17 +16,14 @@ const PadWrapper = styled.div`
 const PadButton = styled.button`
   width: 50px;
   height: 30px;
-  background-color: papayawhip;
-  border: 1px solid papayawhip;
+  background-color: ${props => props.current ? '#0077aa' : 'papayawhip'};
+  border: 1px solid ${props => props.current ? '#0077aa' : 'papayawhip'};
   border-radius: 3px;
   
-  &.active {
-   background-color: rebeccapurple;
-  }
 
 `
 
-const DrumPads = ({ drums, onPadClick }) => {
+const DrumPads = ({ drums, onPadClick, currentDrum }) => {
 
   return <Flex>
     {drums.map((drum, i) => {
@@ -35,7 +32,7 @@ const DrumPads = ({ drums, onPadClick }) => {
         return (
           <PadWrapper key={drum.label}>
             <h3>{drum.label}</h3>
-            <PadButton onClick={onClick}/>
+            <PadButton onClick={onClick} current={currentDrum === i}/>
           </PadWrapper>
         )
       }
