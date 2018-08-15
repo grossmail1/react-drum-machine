@@ -6,19 +6,23 @@ const Step = styled.button`
     width: 40px;
     border: 1px solid grey;
     background-color: ${props => {
+      const {button, activeStep, selectedDrum } = props.theme.color
+  
       if (props.active) {
-        return '#00aeef'
+        return activeStep
       } else if (props.stepDrum) {
-        return '#990088'
+        return selectedDrum
       } else {
-        return '#ddd'
+        return button
       }
     }};
     color:  ${props => {
+      const { black, white } = props.theme.color
+  
       if (props.active || props.stepDrum) {
-        return '#fff'
+        return white
       } else {
-        return '#333'
+        return black
       }
 }};
     margin: 0px 5px;

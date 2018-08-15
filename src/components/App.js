@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import styled from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components';
 
+import { theme } from '../styles/theme'
 import Steps from "components/Steps"
 import BPM from "components/BPM"
 import drums from '../drums'
@@ -12,7 +13,7 @@ import isEmpty from "lodash-es/isEmpty"
 const AppWrapper = styled.div`
 width: 100%;
 height: 100%;
-background-color: #FFEFBF;
+background-color: ${props => props.theme.color.mainBackground};
 `
 
 const millisPerMinute = 1000 * 60
@@ -28,10 +29,11 @@ class App extends Component {
       subdivisions: 4,
       currentDrum: -1,
       steps: Array.apply(null, Array(16)).map((d, i) => ({
-        index: i,
-        drums: []
-      })
-    )}
+          index: i,
+          drums: []
+        })
+      )
+    }
 
 
     this.drums = []
@@ -67,14 +69,14 @@ class App extends Component {
   }
 
   playDrumsForStep = (step) => {
-    const currentStep = this.state.steps[step]
+    const currentStep = this.state.steps[ step ]
 
     const drums = currentStep.drums
 
-    if(!isEmpty(drums)) {
+    if (!isEmpty(drums)) {
       drums.forEach(d => {
-        this.drums[d].currentTime = 0
-        this.drums[d].play()
+        this.drums[ d ].currentTime = 0
+        this.drums[ d ].play()
       })
     }
   }
@@ -87,20 +89,20 @@ class App extends Component {
   }
 
   onPadClick = (i) => {
-    this.setState({currentDrum: i})
-    let drum = this.drums[i]
+    this.setState({ currentDrum: i })
+    let drum = this.drums[ i ]
     drum.currentTime = 0
     drum.play()
   }
 
   onStepClick = (i) => {
-    const newSteps = [...this.state.steps]
-    const index = findIndex(newSteps[this.state.currentDrum].drums, i)
+    const newSteps = [ ...this.state.steps ]
+    const index = findIndex(newSteps[ this.state.currentDrum ].drums, i)
     console.log('index', index)
     if (index > 0) {
-      newSteps[i].drums.splice(index, 1)
+      newSteps[ i ].drums.splice(index, 1)
     } else {
-      newSteps[i].drums.push(this.state.currentDrum)
+      newSteps[ i ].drums.push(this.state.currentDrum)
     }
 
     this.setState({
@@ -111,18 +113,20 @@ class App extends Component {
   render() {
     const { bpm, currentStep, playing, steps, currentDrum } = this.state
     return (
-      <AppWrapper>
-        <header>
-          <h1>Drum Machine</h1>
-        </header>
-        <BPM bpm={bpm} onBPMChange={this.onBPMChange}/>
-        <button onClick={playing ? this.onPause : this.onPlay}>
-          {playing ? 'pause' : 'play'}
-        </button>
-        <Steps currentStep={currentStep} steps={steps} onStepClick={this.onStepClick} currentDrum={currentDrum}/>
-        <DrumPads drums={drums} onPadClick={this.onPadClick} currentDrum={currentDrum}/>
-        <div id="audio-wrapper"/>
-      </AppWrapper>
+      <ThemeProvider theme={theme}>
+        <AppWrapper>
+          <header>
+            <h1>Drum Machine</h1>
+          </header>
+          <BPM bpm={bpm} onBPMChange={this.onBPMChange}/>
+          <button onClick={playing ? this.onPause : this.onPlay}>
+            {playing ? 'pause' : 'play'}
+          </button>
+          <Steps currentStep={currentStep} steps={steps} onStepClick={this.onStepClick} currentDrum={currentDrum}/>
+          <DrumPads drums={drums} onPadClick={this.onPadClick} currentDrum={currentDrum}/>
+          <div id="audio-wrapper"/>
+        </AppWrapper>
+      </ThemeProvider>
     );
   }
 }
